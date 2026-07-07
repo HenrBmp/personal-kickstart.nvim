@@ -333,6 +333,20 @@ end
 ---@return string
 local function gh(repo) return 'https://github.com/' .. repo end
 
+-- File Explorer - NvimTree
+  vim.pack.add { gh 'nvim-tree/nvim-tree.lua' }
+  vim.pack.add { gh 'nvim-tree/nvim-web-devicons' }
+  require('nvim-tree').setup({
+    filters = {
+      dotfiles = true
+    }
+  })
+  vim.keymap.set("n", "<leader>e", "<cmd>:NvimTreeToggle<cr>", { desc = "Open/close file explorer" })
+
+  -- Git GUI - LazyGit
+  vim.pack.add { gh 'kdheepak/lazygit.nvim' }
+  require('lazygit')
+
 -- ============================================================
 -- SECTION 4: UI / CORE UX PLUGINS
 -- guess-indent, gitsigns, which-key, colorscheme, todo-comments, mini modules
@@ -709,9 +723,11 @@ do
     --    https://github.com/pmizio/typescript-tools.nvim
     --
     -- But for many setups, the LSP (`ts_ls`) will work just fine
-    -- ts_ls = {},
-
+    ts_ls = {},
     stylua = {}, -- Used to format Lua code
+    -- biome = {},
+    html = {},
+    cssls = {},
 
     -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
@@ -750,13 +766,13 @@ do
 
   vim.pack.add {
     gh 'neovim/nvim-lspconfig',
-    gh 'mason-org/mason.nvim',
-    gh 'mason-org/mason-lspconfig.nvim',
-    gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
+    -- gh 'mason-org/mason.nvim',
+    -- gh 'mason-org/mason-lspconfig.nvim',
+    -- gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
   }
 
   -- Automatically install LSPs and related tools to stdpath for Neovim
-  require('mason').setup {}
+  -- require('mason').setup {}
 
   -- Ensure the servers and tools above are installed
   --
@@ -770,7 +786,7 @@ do
     -- You can add other tools here that you want Mason to install
   })
 
-  require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+  -- require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
   for name, server in pairs(servers) do
     vim.lsp.config(name, server)
@@ -813,10 +829,10 @@ do
       -- python = { "isort", "black" },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
-      javascript = { "prettierd", stop_after_first = true },
-      typescript= { "prettierd" },
-      css = { "prettierd" },
-      json = { "prettierd" }
+      javascript = { "biome", stop_after_first = true },
+      typescript = { "biome", stop_after_first = true },
+      css = { "prettierd", stop_after_first = true },
+      json = { "biome", stop_after_first = true }
     },
   }
 
@@ -869,7 +885,7 @@ do
       -- See `:help blink-cmp-config-keymap` for defining your own keymap
       preset = 'default',
 
-      -- Custom keybind
+      -- Custom keymaps
       ['<C-Tab>'] = { 'accept' },
 
       -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
