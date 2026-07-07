@@ -153,6 +153,11 @@ do
   vim.o.expandtab = true
   vim.o.smartindent = true
 
+  -- Config for NvimTree
+  vim.g.loaded_netrw = 1
+  vim.g.loaded_netrwPlugin = 1
+  vim.opt.termguicolors = true
+
   -- Sets how neovim will display certain whitespace characters in the editor.
   --  See `:help 'list'`
   --  and `:help 'listchars'`
@@ -258,7 +263,11 @@ do
     callback = function() vim.hl.on_yank() end,
   })
 
-  vim.keymap.set('n', '<leader>w', '<cmd>:w<cr>', { desc = 'Save this file' })
+  -- Save file
+  vim.keymap.set('n', '<leader>w', '<cmd>:wa<cr>', { desc = 'Save this file' })
+
+  -- Close all
+  vim.keymap.set('n', '<leader>Q', '<cmd>:qa<cr>', { desc = 'Close all opened buffers' })
 end
 
 -- ============================================================
@@ -327,25 +336,7 @@ do
   })
 end
 
----Because most plugins are hosted on GitHub, you can use the helper
----function to have less repetition in the following sections.
----@param repo string
----@return string
-local function gh(repo) return 'https://github.com/' .. repo end
-
--- File Explorer - NvimTree
-  vim.pack.add { gh 'nvim-tree/nvim-tree.lua' }
-  vim.pack.add { gh 'nvim-tree/nvim-web-devicons' }
-  require('nvim-tree').setup({
-    filters = {
-      dotfiles = true
-    }
-  })
-  vim.keymap.set("n", "<leader>e", "<cmd>:NvimTreeToggle<cr>", { desc = "Open/close file explorer" })
-
-  -- Git GUI - LazyGit
-  vim.pack.add { gh 'kdheepak/lazygit.nvim' }
-  require('lazygit')
+local gh = require 'custom.utils.gh'
 
 -- ============================================================
 -- SECTION 4: UI / CORE UX PLUGINS
@@ -714,20 +705,12 @@ do
   --  See `:help lsp-config` for information about keys and how to configure
   ---@type table<string, vim.lsp.Config>
   local servers = {
-    -- clangd = {},
-    -- gopls = {},
     pyright = {},
-    -- rust_analyzer = {},
-    --
-    -- Some languages (like typescript) have entire language plugins that can be useful:
-    --    https://github.com/pmizio/typescript-tools.nvim
-    --
-    -- But for many setups, the LSP (`ts_ls`) will work just fine
-    ts_ls = {},
+    ts_ls = {}, -- install typescript and typescript-language-server
     stylua = {}, -- Used to format Lua code
-    -- biome = {},
-    html = {},
-    cssls = {},
+    biome = { filetypes = { 'astro', 'graphql', 'json', 'jsonc', 'svelte', 'vue' } }, -- install @biomejs/biome
+    html = {}, -- install vscode-langservers-extracted
+    cssls = {}, -- install vscode-langservers-extracted
 
     -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
@@ -766,13 +749,13 @@ do
 
   vim.pack.add {
     gh 'neovim/nvim-lspconfig',
-    -- gh 'mason-org/mason.nvim',
-    -- gh 'mason-org/mason-lspconfig.nvim',
-    -- gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
+    gh 'mason-org/mason.nvim',
+    gh 'mason-org/mason-lspconfig.nvim',
+    gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
   }
 
   -- Automatically install LSPs and related tools to stdpath for Neovim
-  -- require('mason').setup {}
+  require('mason').setup {}
 
   -- Ensure the servers and tools above are installed
   --
@@ -786,7 +769,7 @@ do
     -- You can add other tools here that you want Mason to install
   })
 
-  -- require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+  require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
   for name, server in pairs(servers) do
     vim.lsp.config(name, server)
@@ -806,12 +789,13 @@ do
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
-        -- lua = true,
+        lua = true,
         python = true,
         javascript = true,
         typescript = true,
         html = true,
         css = true,
+        json = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
@@ -829,10 +813,11 @@ do
       -- python = { "isort", "black" },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
-      javascript = { "biome", stop_after_first = true },
-      typescript = { "biome", stop_after_first = true },
-      css = { "prettierd", stop_after_first = true },
-      json = { "biome", stop_after_first = true }
+      javascript = { 'biome', stop_after_first = true },
+      typescript = { 'biome', stop_after_first = true },
+      css = { 'prettierd', stop_after_first = true },
+      html = { 'prettierd', stop_after_first = true },
+      json = { 'biome', stop_after_first = true },
     },
   }
 
@@ -886,7 +871,7 @@ do
       preset = 'default',
 
       -- Custom keymaps
-      ['<C-Tab>'] = { 'accept' },
+      -- ['<C-Tab>'] = { 'accept' },
 
       -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
       --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -1010,7 +995,7 @@ do
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- require 'custom.plugins'
+  require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
