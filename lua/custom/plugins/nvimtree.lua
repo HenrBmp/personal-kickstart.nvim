@@ -7,9 +7,9 @@ require('nvim-tree').setup {
     dotfiles = false,
     git_ignored = false,
     custom = {
-      '^\\.git',
-      '^\\node_modules',
-      '^\\package-lock.json',
+      '^\\.git$',
+      '^\\node_modules$',
+      '^\\package-lock.json$',
     },
   },
 }
