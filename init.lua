@@ -264,7 +264,7 @@ do
   })
 
   -- Save file
-  vim.keymap.set('n', '<leader>w', '<cmd>:wa<cr>', { desc = 'Save this file' })
+  vim.keymap.set('n', '<leader>w', '<cmd>:wa<cr>', { desc = 'Save all files' })
 
   -- Close all
   vim.keymap.set('n', '<leader>Q', '<cmd>:qa<cr>', { desc = 'Close all opened buffers' })
@@ -711,6 +711,7 @@ do
     biome = { filetypes = { 'astro', 'graphql', 'json', 'jsonc', 'svelte', 'vue' } }, -- install @biomejs/biome
     html = {}, -- install vscode-langservers-extracted
     cssls = {}, -- install vscode-langservers-extracted
+    -- marksman = {}, --- install marksman
 
     -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
@@ -749,13 +750,13 @@ do
 
   vim.pack.add {
     gh 'neovim/nvim-lspconfig',
-    gh 'mason-org/mason.nvim',
-    gh 'mason-org/mason-lspconfig.nvim',
-    gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
+    -- gh 'mason-org/mason.nvim',
+    -- gh 'mason-org/mason-lspconfig.nvim',
+    -- gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
   }
 
   -- Automatically install LSPs and related tools to stdpath for Neovim
-  require('mason').setup {}
+  -- require('mason').setup {}
 
   -- Ensure the servers and tools above are installed
   --
@@ -769,7 +770,7 @@ do
     -- You can add other tools here that you want Mason to install
   })
 
-  require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+  -- require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
   for name, server in pairs(servers) do
     vim.lsp.config(name, server)
@@ -796,6 +797,7 @@ do
         html = true,
         css = true,
         json = true,
+        -- markdown = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
@@ -818,6 +820,7 @@ do
       css = { 'prettierd', stop_after_first = true },
       html = { 'prettierd', stop_after_first = true },
       json = { 'biome', stop_after_first = true },
+      -- markdown = { 'marksman', stop_after_first = true },
     },
   }
 
