@@ -1,6 +1,8 @@
+local gh = require 'custom.utils.gh'
+
 vim.pack.add {
-  'https://github.com/nvim-tree/nvim-web-devicons',
-  'https://github.com/nvim-lualine/lualine.nvim',
+  gh 'nvim-tree/nvim-web-devicons',
+  gh 'nvim-lualine/lualine.nvim',
 }
 require('lualine').setup {
   options = {
