@@ -711,6 +711,7 @@ do
     biome = { filetypes = { 'astro', 'graphql', 'json', 'jsonc', 'svelte', 'vue' } }, -- install @biomejs/biome
     html = {}, -- install vscode-langservers-extracted
     cssls = {}, -- install vscode-langservers-extracted
+    clangd = {}, -- install bin from https://github.com/clangd/clangd
     -- marksman = {}, --- install marksman
 
     -- Special Lua Config, as recommended by neovim help docs
