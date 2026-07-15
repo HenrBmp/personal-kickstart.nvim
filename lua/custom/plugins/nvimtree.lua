@@ -13,7 +13,7 @@ require('nvim-tree').setup {
     },
   },
 }
-vim.keymap.set('n', '<leader>e', '<cmd>:NvimTreeToggle<cr>', { desc = 'Open/close file explorer' })
+vim.keymap.set('n', '<leader>e', '<cmd>:NvimTreeToggle<cr>', { desc = 'Open/close file [E]xplorer' })
 
 -- Auto open file explorer on startup
 vim.api.nvim_create_autocmd({ 'VimEnter' }, { callback = function() require('nvim-tree.api').tree.open() end })
