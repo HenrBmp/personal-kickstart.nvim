@@ -798,6 +798,7 @@ do
         html = true,
         css = true,
         json = true,
+        cpp = true,
         -- markdown = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
