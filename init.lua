@@ -712,6 +712,7 @@ do
     html = {}, -- install vscode-langservers-extracted
     cssls = {}, -- install vscode-langservers-extracted
     clangd = {}, -- install bin from https://github.com/clangd/clangd
+    jdtls = {},
     -- marksman = {}, --- install marksman
 
     -- Special Lua Config, as recommended by neovim help docs
